@@ -1,0 +1,39 @@
+# DINO-WT default configuration (values follow Sections 3.9 / 4.1 of the paper)
+seed: 42
+
+model:
+  backbone: dinov2_vitb14      # DINOv2 ViT-B/14 (use "tiny" for offline smoke tests)
+  pretrained: true
+  hub_dir: null                # path to a local clone of facebookresearch/dinov2 (offline use)
+  frozen_blocks: 8             # first 8 of 12 blocks frozen, last 4 fine-tuned
+  img_size: 224
+  num_heads: null              # null -> embed_dim // 64 (12 for ViT-B)
+  attn_lambda_init: 1.0        # initial strength of the frequency prior in attention
+  decoder_channels: [256, 128, 64, 32]
+
+data:
+  train_root: data/train       # folder of clean images (COCO train2017 / VOC JPEGImages)
+  val_root: data/val
+  val_max_images: 500
+  sigma_range: [2.0, 5.0]      # Gaussian defocus sigma for synthetic pairs
+  hist_eq: false               # histogram equalisation (luminance) on inputs
+  num_workers: 4
+
+train:
+  epochs: 100
+  batch_size: 8
+  lr: 1.0e-4
+  min_lr: 1.0e-6               # cosine annealing floor
+  weight_decay: 1.0e-5
+  grad_clip: 1.0
+  amp: true                    # mixed precision (CUDA only)
+  log_every: 50
+
+loss:                          # Eq. 32: alpha, beta, gamma, delta, eta
+  pixel: 1.0                   # alpha
+  ssim: 1.0                    # beta
+  freq: 0.5                    # gamma
+  perceptual: 0.1              # delta
+  edge: 0.5                    # eta
+  wavelet_pr: 1.0              # keeps the learnable wavelet a valid perfect-reconstruction pair
+  use_perceptual: true

@@ -1,0 +1,35 @@
+# Tiny CPU-friendly config: no downloads, runs in seconds. For testing the pipeline only.
+seed: 0
+model:
+  backbone: tiny
+  pretrained: false
+  hub_dir: null
+  frozen_blocks: 2
+  img_size: 224
+  num_heads: null
+  attn_lambda_init: 1.0
+  decoder_channels: [64, 32, 16, 16]
+data:
+  train_root: data/train
+  val_root: data/val
+  val_max_images: 8
+  sigma_range: [2.0, 5.0]
+  hist_eq: false
+  num_workers: 0
+train:
+  epochs: 1
+  batch_size: 2
+  lr: 1.0e-3
+  min_lr: 1.0e-5
+  weight_decay: 1.0e-5
+  grad_clip: 1.0
+  amp: false
+  log_every: 1
+loss:
+  pixel: 1.0
+  ssim: 1.0
+  freq: 0.5
+  perceptual: 0.1
+  edge: 0.5
+  wavelet_pr: 1.0
+  use_perceptual: true
